@@ -33,7 +33,7 @@ This repository contains the necessary Terraform configurations and Ansible play
 2. Navigate to the repository directory.
 
     ```sh
-    cd ansible-demo/terraform
+    cd ./terraform
     ```
 
 3. Run the `gen_config.py` script to generate the `vm.tf` file based on your VM definitions.
