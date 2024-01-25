@@ -1,0 +1,37 @@
+---
+- name: Configure VM with NTP and Nginx
+  hosts: all
+  vars:
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+  become: yes
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ hostname_var }}"
+      become: true
+
+    - name: Install Chrony (NTP)
+      dnf:
+        name: chrony
+        state: latest
+      become: true
+
+    - name: Ensure Chrony is running
+      service:
+        name: chronyd
+        state: started
+        enabled: yes
+      become: true
+
+    - name: Install Nginx
+      dnf:
+        name: nginx
+        state: latest
+      become: true
+
+    - name: Ensure Nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+      become: true

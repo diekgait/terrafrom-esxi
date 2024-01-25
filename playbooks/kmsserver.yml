@@ -1,0 +1,28 @@
+- name: Configure Windows Hostname and Install KMS service
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_connection: winrm
+    ansible_winrm_transport: ntlm
+    ansible_winrm_port: 5985
+    ansible_winrm_server_cert_validation: ignore
+    domain_name: mydomain.local
+
+  tasks:
+
+    - name: Change the hostname
+      ansible.windows.win_hostname:
+        name: "{{ hostname_var }}"
+      register: res
+
+    - name: Reboot
+      ansible.windows.win_reboot:
+      when: res.reboot_required
+
+    - name: Install KMS Services
+      ansible.builtin.win_feature:
+        name: VolumeActivation
+        include_management_tools: yes
+      when: inventory_hostname == ansible_play_hosts_all[0]
+
